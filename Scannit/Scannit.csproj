@@ -7,8 +7,8 @@
     <ProjectGuid>{E9290571-41C5-4D01-8EB8-B1DCABA3D7D2}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TrippitReader</RootNamespace>
-    <AssemblyName>TrippitReader</AssemblyName>
+    <RootNamespace>Scannit</RootNamespace>
+    <AssemblyName>Scannit</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.14393.0</TargetPlatformVersion>

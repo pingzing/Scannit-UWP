@@ -3,7 +3,7 @@
   <Identity Name="520fdf73-bec2-46b0-b3ec-5312ee884480" Publisher="CN=mcali" Version="1.0.0.0" />
   <mp:PhoneIdentity PhoneProductId="520fdf73-bec2-46b0-b3ec-5312ee884480" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
-    <DisplayName>TrippitReader</DisplayName>
+    <DisplayName>Scannit</DisplayName>
     <PublisherDisplayName>mcali</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
@@ -14,8 +14,8 @@
     <Resource Language="x-generate" />
   </Resources>
   <Applications>
-    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="TrippitReader.App">
-      <uap:VisualElements DisplayName="TrippitReader" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" Description="TrippitReader" BackgroundColor="transparent">
+    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="Scannit.App">
+      <uap:VisualElements DisplayName="Scannit" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" Description="Scannit" BackgroundColor="transparent">
         <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png">
         </uap:DefaultTile>
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
