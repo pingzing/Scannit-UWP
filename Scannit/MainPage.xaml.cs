@@ -101,12 +101,18 @@ namespace Scannit
                 string validityZone = TravelCard.ValidityArea1.IsZone 
                     ? TravelCard.ValidityArea1.ValidityZone.ToString() 
                     : TravelCard.ValidityArea1.ValidityVehicle.ToString();
-                return $"{validityZone}\nExpires on: {TravelCard.PeriodEndDate1.ToLocalTime()}\nTime remaining: {Math.Max(0, Math.Round((TravelCard.PeriodEndDate1 - DateTimeOffset.Now).TotalDays, 1))} days";
+                if (TravelCard.PeriodEndDate1 >= TravelCard.PeriodEndDate2)
+                {
+                    return $"{validityZone}\nExpires on: {TravelCard.PeriodEndDate1.ToLocalTime()}\nTime remaining: {Math.Max(0, Math.Round((TravelCard.PeriodEndDate1 - DateTimeOffset.Now).TotalDays, 1))} days";
+                }
+                else
+                {
+                    return $"{validityZone}\nExpires on: {TravelCard.PeriodEndDate2.ToLocalTime()}\nTime remaining: {Math.Max(0, Math.Round((TravelCard.PeriodEndDate2 - DateTimeOffset.Now).TotalDays, 1))} days";
+                }
             }
         }
 
         public IEnumerable<History> CardHistory => TravelCard?.History?.Where(x => x != null);
-
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -118,15 +124,15 @@ namespace Scannit
 
         private async void MainPage_Loaded(object sender, RoutedEventArgs e)
         {
-            string selector = SmartCardReader.GetDeviceSelector();
-            DeviceInformationCollection devices = await DeviceInformation.FindAllAsync(selector);
+            //string selector = SmartCardReader.GetDeviceSelector();
+            //DeviceInformationCollection devices = await DeviceInformation.FindAllAsync(selector);
 
-            foreach (DeviceInformation device in devices)
-            {
-                SmartCardReader reader = await SmartCardReader.FromIdAsync(device.Id);
-                reader.CardAdded += Reader_CardAdded;
-                reader.CardRemoved += Reader_CardRemoved;
-            }           
+            //foreach (DeviceInformation device in devices)
+            //{
+            //    SmartCardReader reader = await SmartCardReader.FromIdAsync(device.Id);
+            //    reader.CardAdded += Reader_CardAdded;
+            //    reader.CardRemoved += Reader_CardRemoved;               
+            //}                       
         }
 
         private void Reader_CardRemoved(SmartCardReader sender, CardRemovedEventArgs args)
