@@ -18,9 +18,7 @@ namespace Scannit.BackgroundScanner
 {
     public sealed class BackgroundScanner : IBackgroundTask
     {
-        BackgroundTaskDeferral _deferral;
-        private volatile bool _cancelRequested;
-        private ThreadPoolTimer _pollNfcTimer;
+        BackgroundTaskDeferral _deferral;                
         private IBackgroundTaskInstance _taskInstance;
 
         public async void Run(IBackgroundTaskInstance taskInstance)
@@ -33,19 +31,7 @@ namespace Scannit.BackgroundScanner
             string selector = SmartCardReader.GetDeviceSelector();
             DeviceInformationCollection devices = await DeviceInformation.FindAllAsync(selector);
             var reader = await SmartCardReader.FromIdAsync(devices.FirstOrDefault().Id);
-            reader.CardAdded += Reader_CardAdded;
-
-            // Start timer
-            _pollNfcTimer = ThreadPoolTimer.CreatePeriodicTimer
-            (
-                OnTimerTick,
-                TimeSpan.FromSeconds(3)
-            );            
-        }
-
-        private void Reader_CardRemoved(SmartCardReader sender, CardRemovedEventArgs args)
-        {
-            // do nothing
+            reader.CardAdded += Reader_CardAdded;        
         }
 
         private async void Reader_CardAdded(SmartCardReader sender, CardAddedEventArgs args)
@@ -100,22 +86,10 @@ namespace Scannit.BackgroundScanner
             ToastNotificationManager.CreateToastNotifier().Show(toast);
         }
 
-        private void OnTimerTick(ThreadPoolTimer timer)
-        {
-            if (_cancelRequested)
-            {
-                _taskInstance.Progress = 0;
-                timer.Cancel();
-                _deferral.Complete();                
-            }
-
-            _taskInstance.Progress = 1;
-            Debug.WriteLine("Background task is running.");
-        }
-
         private void TaskInstance_Canceled(IBackgroundTaskInstance sender, BackgroundTaskCancellationReason reason)
-        {
-            _cancelRequested = true;
+        {            
+            _taskInstance.Progress = 0;            
+            _deferral.Complete();
         }
     }
 }

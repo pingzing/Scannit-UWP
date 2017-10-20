@@ -5,7 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Background;
+using Windows.ApplicationModel.Core;
 using Windows.Foundation.Collections;
+using Windows.UI.Core;
 
 namespace Scannit
 {
@@ -38,10 +40,9 @@ namespace Scannit
 
         public async Task StartScanner()
         {
-            if (_appTrigger == null)
-            {
-                _appTrigger = new ApplicationTrigger();
-            }
+            StopScanner();
+
+            _appTrigger = new ApplicationTrigger();            
 
             var requestStatus = await BackgroundExecutionManager.RequestAccessAsync();
             if (requestStatus == BackgroundAccessStatus.AlwaysAllowed
@@ -59,6 +60,7 @@ namespace Scannit
             if (_bgTask != null)
             {
                 _bgTask.Unregister(true);
+                _bgTask = null;
             }
         }
 
@@ -79,18 +81,21 @@ namespace Scannit
             BackgroundTaskRegistration bgTask = builder.Register();
             bgTask.Progress += BgTask_Progress;
             bgTask.Completed += BgTask_Completed;
+            IsBgTaskAlive = true;
 
             return bgTask;
         }
 
-        private void BgTask_Progress(BackgroundTaskRegistration sender, BackgroundTaskProgressEventArgs args)
+        private async void BgTask_Progress(BackgroundTaskRegistration sender, BackgroundTaskProgressEventArgs args)
         {
-            IsBgTaskAlive = true;
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                () => IsBgTaskAlive = true);
         }
 
-        private void BgTask_Completed(BackgroundTaskRegistration sender, BackgroundTaskCompletedEventArgs args)
+        private async void BgTask_Completed(BackgroundTaskRegistration sender, BackgroundTaskCompletedEventArgs args)
         {
-            IsBgTaskAlive = false;
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                () =>IsBgTaskAlive = false);
         }
     }
 }

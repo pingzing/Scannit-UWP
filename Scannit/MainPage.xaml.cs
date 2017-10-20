@@ -21,6 +21,8 @@ namespace Scannit
     /// </summary>
     public sealed partial class MainPage : Page, INotifyPropertyChanged
     {
+        public ScannerComm Scanner => ((App)Application.Current).Scanner;
+
         private TravelCard _travelCard = null;
         public TravelCard TravelCard
         {
@@ -135,10 +137,6 @@ namespace Scannit
             //}                       
         }
 
-        private void Reader_CardRemoved(SmartCardReader sender, CardRemovedEventArgs args)
-        {
-            
-        }
 
         private async void Reader_CardAdded(SmartCardReader sender, CardAddedEventArgs args)
         {
@@ -154,6 +152,18 @@ namespace Scannit
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"Failed to read travel card! Exception: {ex.ToString()}\nStack trace: {ex.StackTrace}");
+            }
+        }
+
+        private async void ToggleBackgroundScanning()
+        {
+            if (Scanner.IsBgTaskAlive)
+            {
+                Scanner.StopScanner();
+            }
+            else
+            {
+                await Scanner.StartScanner();
             }
         }
 

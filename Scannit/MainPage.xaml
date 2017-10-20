@@ -51,6 +51,15 @@
                                        Text="Season pass"/>
                         <TextBlock x:Name="SeasonPassInfoBlock"
                                        Text="{x:Bind SeasonPassInfoString, Mode=OneWay}"/>
+
+                        <TextBlock Margin="0 20 0 0">
+                            <Run Text="Background scanner active: "/><Run Text="{x:Bind Scanner.IsBgTaskAlive, Mode=OneWay}"/>
+                        </TextBlock>
+
+                        <Button x:Name="BGTaskToggle"
+                                Content="Toggle Background Scanner"
+                                Click="{x:Bind ToggleBackgroundScanning}"/>
+
                     </StackPanel>
                 </ScrollViewer>
             </PivotItem>
