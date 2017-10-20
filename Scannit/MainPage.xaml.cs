@@ -1,5 +1,6 @@
 ﻿using HslTravelSharp.Core.Models;
 using HslTravelSharpUwp;
+using Scannit.Broker;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -134,7 +135,13 @@ namespace Scannit
             //    SmartCardReader reader = await SmartCardReader.FromIdAsync(device.Id);
             //    reader.CardAdded += Reader_CardAdded;
             //    reader.CardRemoved += Reader_CardRemoved;               
-            //}                       
+            //}     
+            var state = SharedState.Get();
+            SharedState.Set(new SharedFileModel
+            {
+                IsAppInForeground = true
+            });
+            var newState = SharedState.Get();
         }
 
 

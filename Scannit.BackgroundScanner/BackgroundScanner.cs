@@ -46,7 +46,7 @@ namespace Scannit.BackgroundScanner
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Failed to read travel card! Exception: {ex.ToString()}\nStack trace: {ex.StackTrace}");
+                Debug.WriteLine($"Failed to read travel card! Exception: {ex}\nStack trace: {ex.StackTrace}");
             }
         }
 
