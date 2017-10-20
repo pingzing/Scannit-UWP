@@ -103,6 +103,9 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
+    <Content Include="SharedFile.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="TrippitReader_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
@@ -140,6 +143,10 @@
     <ProjectReference Include="..\Scannit.BackgroundScanner\Scannit.BackgroundScanner.csproj">
       <Project>{e45038ab-a169-48bb-b2c8-bb0955fdc605}</Project>
       <Name>Scannit.BackgroundScanner</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Scannit.Broker\Scannit.Broker.csproj">
+      <Project>{F034CB5C-B40F-4A0C-B67E-8939DFD86FD2}</Project>
+      <Name>Scannit.Broker</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -41,6 +41,8 @@ namespace Scannit.BackgroundScanner
                 TravelCard card = await CardOperations.ReadTravelCardAsync(args.SmartCard);
                 if (card != null)
                 {
+
+
                     PostToastNotification(card);
                 }
             }
@@ -61,17 +63,14 @@ namespace Scannit.BackgroundScanner
                     {
                         new AdaptiveText()
                         {
-                            Text = "Scannit"
+                            Text = card.CardNumber
                         },
                         new AdaptiveText()
                         {
-                            Text = $"Remaining value: {(card.ValueTotalCents / 100m).ToString("#.##")} €",
-                            HintMaxLines = 1
+                            Text = $"Remaining value: {(card.ValueTotalCents / 100m).ToString("#.##")} €" +
+                            $"\nSeason pass expires: {youngestValueExpiration.ToLocalTime().ToString(DateTimeFormatInfo.CurrentInfo.ShortDatePattern)}",
+                            HintMaxLines = 2
                         },
-                        new AdaptiveText()
-                        {
-                            Text = $"Season pass expires: {youngestValueExpiration.ToLocalTime().ToString(DateTimeFormatInfo.CurrentInfo.ShortDatePattern)}"
-                        }
                     }
                 },
             };

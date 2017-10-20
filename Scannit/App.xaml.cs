@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Scannit.Broker;
+using System;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Background;
@@ -54,7 +55,14 @@ namespace Scannit
                 Window.Current.Activate();
             }
 
-            await Scanner.StartScanner();            
+            await Scanner.StartScanner();
+            var currentState = await SharedState.GetAsync();
+            if (currentState == null)
+            {
+                currentState = new SharedFileModel();
+            }
+            currentState.IsAppInForeground = true;
+            await SharedState.SetAsync(currentState);
         }
 
         void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
@@ -64,7 +72,15 @@ namespace Scannit
         
         private async void OnSuspending(object sender, SuspendingEventArgs e)
         {
-            var deferral = e.SuspendingOperation.GetDeferral();            
+            var deferral = e.SuspendingOperation.GetDeferral();
+
+            var currentState = await SharedState.GetAsync();
+            if (currentState == null)
+            {
+                currentState = new SharedFileModel();
+            }
+            currentState.IsAppInForeground = false;
+            await SharedState.SetAsync(currentState);
 
             deferral.Complete();
         }       

@@ -30,13 +30,7 @@ namespace Scannit
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsBgTaskAlive)));
                 }
             }
-        }
-
-        public ScannerComm()
-        {
-            StartScanner();
-        }
-
+        }        
 
         public async Task StartScanner()
         {

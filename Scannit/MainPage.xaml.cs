@@ -136,12 +136,12 @@ namespace Scannit
             //    reader.CardAdded += Reader_CardAdded;
             //    reader.CardRemoved += Reader_CardRemoved;               
             //}     
-            var state = SharedState.Get();
-            SharedState.Set(new SharedFileModel
+            var state = await SharedState.GetAsync();
+            await SharedState.SetAsync(new SharedFileModel
             {
                 IsAppInForeground = true
             });
-            var newState = SharedState.Get();
+            var newState = await SharedState.GetAsync();
         }
 
 
