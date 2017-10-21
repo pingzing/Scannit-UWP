@@ -9,8 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scannit.BackgroundScanner",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scannit.Broker", "Scannit.Broker\Scannit.Broker.csproj", "{F034CB5C-B40F-4A0C-B67E-8939DFD86FD2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HslTravelSharp.Core", "..\HslSharp\HslTravelSharp.Core\HslTravelSharp.Core.csproj", "{3175E07D-EF1E-4D45-8F91-CB2BFE227107}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -77,22 +75,6 @@ Global
 		{F034CB5C-B40F-4A0C-B67E-8939DFD86FD2}.Release|x64.Build.0 = Release|x64
 		{F034CB5C-B40F-4A0C-B67E-8939DFD86FD2}.Release|x86.ActiveCfg = Release|x86
 		{F034CB5C-B40F-4A0C-B67E-8939DFD86FD2}.Release|x86.Build.0 = Release|x86
-		{3175E07D-EF1E-4D45-8F91-CB2BFE227107}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3175E07D-EF1E-4D45-8F91-CB2BFE227107}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3175E07D-EF1E-4D45-8F91-CB2BFE227107}.Debug|ARM.ActiveCfg = Debug|Any CPU
-		{3175E07D-EF1E-4D45-8F91-CB2BFE227107}.Debug|ARM.Build.0 = Debug|Any CPU
-		{3175E07D-EF1E-4D45-8F91-CB2BFE227107}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{3175E07D-EF1E-4D45-8F91-CB2BFE227107}.Debug|x64.Build.0 = Debug|Any CPU
-		{3175E07D-EF1E-4D45-8F91-CB2BFE227107}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{3175E07D-EF1E-4D45-8F91-CB2BFE227107}.Debug|x86.Build.0 = Debug|Any CPU
-		{3175E07D-EF1E-4D45-8F91-CB2BFE227107}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3175E07D-EF1E-4D45-8F91-CB2BFE227107}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3175E07D-EF1E-4D45-8F91-CB2BFE227107}.Release|ARM.ActiveCfg = Release|Any CPU
-		{3175E07D-EF1E-4D45-8F91-CB2BFE227107}.Release|ARM.Build.0 = Release|Any CPU
-		{3175E07D-EF1E-4D45-8F91-CB2BFE227107}.Release|x64.ActiveCfg = Release|Any CPU
-		{3175E07D-EF1E-4D45-8F91-CB2BFE227107}.Release|x64.Build.0 = Release|Any CPU
-		{3175E07D-EF1E-4D45-8F91-CB2BFE227107}.Release|x86.ActiveCfg = Release|Any CPU
-		{3175E07D-EF1E-4D45-8F91-CB2BFE227107}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

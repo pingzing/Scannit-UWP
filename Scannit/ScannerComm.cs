@@ -91,8 +91,11 @@ namespace Scannit
             if (args.Progress > 0)
             {
                 RawTravelCard rawCard = await SharedState.GetAsync<RawTravelCard>(SharedState.LastSeenCard);
-                TravelCard card = new TravelCard(rawCard);
-                LastSeenCardUpdated?.Invoke(this, card);
+                if (rawCard != null)
+                {
+                    TravelCard card = new TravelCard(rawCard);
+                    LastSeenCardUpdated?.Invoke(this, card);
+                }
             }
         }
 
