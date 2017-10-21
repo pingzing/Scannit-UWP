@@ -111,8 +111,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="HslTravelSharp.Core">
+      <Version>1.0.3</Version>
+    </PackageReference>
     <PackageReference Include="HslTravelSharp.Uwp">
-      <Version>1.0.1</Version>
+      <Version>1.0.2</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.0.1</Version>
@@ -128,6 +131,16 @@
     <SDKReference Include="WindowsMobile, Version=10.0.15063.0">
       <Name>Windows Mobile Extensions for the UWP</Name>
     </SDKReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\HslSharp\HslTravelSharp.Core\HslTravelSharp.Core.csproj">
+      <Project>{3175e07d-ef1e-4d45-8f91-cb2bfe227107}</Project>
+      <Name>HslTravelSharp.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Scannit.Broker\Scannit.Broker.csproj">
+      <Project>{F034CB5C-B40F-4A0C-B67E-8939DFD86FD2}</Project>
+      <Name>Scannit.Broker</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

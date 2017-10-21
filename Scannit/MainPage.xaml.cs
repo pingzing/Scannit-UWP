@@ -127,39 +127,13 @@ namespace Scannit
 
         private async void MainPage_Loaded(object sender, RoutedEventArgs e)
         {
-            //string selector = SmartCardReader.GetDeviceSelector();
-            //DeviceInformationCollection devices = await DeviceInformation.FindAllAsync(selector);
-
-            //foreach (DeviceInformation device in devices)
-            //{
-            //    SmartCardReader reader = await SmartCardReader.FromIdAsync(device.Id);
-            //    reader.CardAdded += Reader_CardAdded;
-            //    reader.CardRemoved += Reader_CardRemoved;               
-            //}     
-            var state = await SharedState.GetAsync();
-            await SharedState.SetAsync(new SharedFileModel
-            {
-                IsAppInForeground = true
-            });
-            var newState = await SharedState.GetAsync();
+            ((App)Application.Current).Scanner.LastSeenCardUpdated += Scanner_LastSeenCardUpdated;
         }
 
-
-        private async void Reader_CardAdded(SmartCardReader sender, CardAddedEventArgs args)
+        private async void Scanner_LastSeenCardUpdated(object sender, TravelCard e)
         {
-            try
-            {
-                TravelCard card = await CardOperations.ReadTravelCardAsync(args.SmartCard);
-                if (card != null)
-                {
-                    await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                        () => TravelCard = card);
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Failed to read travel card! Exception: {ex.ToString()}\nStack trace: {ex.StackTrace}");
-            }
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+               () => TravelCard = e);
         }
 
         private async void ToggleBackgroundScanning()

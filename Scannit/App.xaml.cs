@@ -17,6 +17,7 @@ namespace Scannit
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+            this.Resuming += OnResuming;
             Scanner = new ScannerComm();            
         }
 
@@ -55,14 +56,8 @@ namespace Scannit
                 Window.Current.Activate();
             }
 
+            await SharedState.SetAsync(SharedState.IsApplicationInForeground, true);
             await Scanner.StartScanner();
-            var currentState = await SharedState.GetAsync();
-            if (currentState == null)
-            {
-                currentState = new SharedFileModel();
-            }
-            currentState.IsAppInForeground = true;
-            await SharedState.SetAsync(currentState);
         }
 
         void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
@@ -74,15 +69,16 @@ namespace Scannit
         {
             var deferral = e.SuspendingOperation.GetDeferral();
 
-            var currentState = await SharedState.GetAsync();
-            if (currentState == null)
-            {
-                currentState = new SharedFileModel();
-            }
-            currentState.IsAppInForeground = false;
-            await SharedState.SetAsync(currentState);
+            await SharedState.SetAsync(SharedState.IsApplicationInForeground, false);
 
             deferral.Complete();
-        }       
+        }
+
+
+        private async void OnResuming(object sender, object e)
+        {
+            await SharedState.SetAsync(SharedState.IsApplicationInForeground, true);
+            await Scanner.StartScanner();
+        }
     }
 }

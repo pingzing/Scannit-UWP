@@ -103,9 +103,6 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
-    <Content Include="SharedFile.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <None Include="TrippitReader_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
@@ -129,8 +126,11 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="HslTravelSharp.Core">
+      <Version>1.0.3</Version>
+    </PackageReference>
     <PackageReference Include="HslTravelSharp.Uwp">
-      <Version>1.0.1</Version>
+      <Version>1.0.2</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.0.1</Version>
@@ -140,6 +140,10 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\HslSharp\HslTravelSharp.Core\HslTravelSharp.Core.csproj">
+      <Project>{3175e07d-ef1e-4d45-8f91-cb2bfe227107}</Project>
+      <Name>HslTravelSharp.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Scannit.BackgroundScanner\Scannit.BackgroundScanner.csproj">
       <Project>{e45038ab-a169-48bb-b2c8-bb0955fdc605}</Project>
       <Name>Scannit.BackgroundScanner</Name>
@@ -154,6 +158,7 @@
       <Name>Windows Mobile Extensions for the UWP</Name>
     </SDKReference>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

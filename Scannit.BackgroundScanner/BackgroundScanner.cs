@@ -1,6 +1,7 @@
 ﻿using HslTravelSharp.Core.Models;
 using HslTravelSharpUwp;
 using Microsoft.Toolkit.Uwp.Notifications;
+using Scannit.Broker;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -41,9 +42,16 @@ namespace Scannit.BackgroundScanner
                 TravelCard card = await CardOperations.ReadTravelCardAsync(args.SmartCard);
                 if (card != null)
                 {
-
-
-                    PostToastNotification(card);
+                    Task updateCardTask = SharedState.SetAsync(SharedState.LastSeenCard, card.RawValues);
+                    Task updateTimestampTask = SharedState.SetAsync(SharedState.LastSeenTimestamp, DateTimeOffset.UtcNow);
+                    if (await SharedState.GetAsync<bool>(SharedState.IsApplicationInForeground))
+                    {
+                        _taskInstance.Progress = 2;
+                    }
+                    else
+                    {
+                        PostToastNotification(card);
+                    }
                 }
             }
             catch (Exception ex)

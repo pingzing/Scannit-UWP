@@ -1,4 +1,6 @@
-﻿using System;
+﻿using HslTravelSharp.Core.Models;
+using Scannit.Broker;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -17,6 +19,7 @@ namespace Scannit
         private BackgroundTaskRegistration _bgTask;
 
         public event PropertyChangedEventHandler PropertyChanged;
+        public event EventHandler<TravelCard> LastSeenCardUpdated;
 
         private bool _isBgTaskAlive = false;
         public bool IsBgTaskAlive
@@ -84,12 +87,19 @@ namespace Scannit
         {
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
                 () => IsBgTaskAlive = true);
+
+            if (args.Progress > 0)
+            {
+                RawTravelCard rawCard = await SharedState.GetAsync<RawTravelCard>(SharedState.LastSeenCard);
+                TravelCard card = new TravelCard(rawCard);
+                LastSeenCardUpdated?.Invoke(this, card);
+            }
         }
 
         private async void BgTask_Completed(BackgroundTaskRegistration sender, BackgroundTaskCompletedEventArgs args)
         {
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                () =>IsBgTaskAlive = false);
+                () => IsBgTaskAlive = false);
         }
     }
 }

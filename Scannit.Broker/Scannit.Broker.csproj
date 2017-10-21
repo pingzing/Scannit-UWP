@@ -106,20 +106,24 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="DictionaryExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SharedState.cs" />
     <EmbeddedResource Include="Properties\Scannit.Broker.rd.xml" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="HslTravelSharp.Core">
-      <Version>1.0.2</Version>
-    </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.0.1</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>10.0.3</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\HslSharp\HslTravelSharp.Core\HslTravelSharp.Core.csproj">
+      <Project>{3175e07d-ef1e-4d45-8f91-cb2bfe227107}</Project>
+      <Name>HslTravelSharp.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

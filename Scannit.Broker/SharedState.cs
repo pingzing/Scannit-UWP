@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -12,19 +10,21 @@ namespace Scannit.Broker
 {
     public static class SharedState
     {
-        private const string MutexName = "SharedFile";        
-        private static Mutex _fileMutex = new Mutex(false, MutexName);        
+        private const string MutexName = "SharedFile";
+        private static readonly Dictionary<string, Mutex> _namedMutexes = new Dictionary<string, Mutex>();       
 
         public static async Task<T> GetAsync<T>(string propertyName)
         {
+            Mutex fileMutex = _namedMutexes.GetOrAdd(propertyName, () => new Mutex(false, propertyName));
             T readObject = default(T);
             string fileContents = null;
             bool lockObtained = false;
             try
             {
-                StorageFile file = await StorageFile.GetFileFromApplicationUriAsync(new Uri($"ms-appx:///{SharedFileName}"));
+                StorageFolder folder = ApplicationData.Current.LocalFolder;
+                StorageFile file = await folder.CreateFileAsync($"{propertyName}.json", CreationCollisionOption.OpenIfExists);                
 
-                lockObtained = _fileMutex.WaitOne(5000);
+                lockObtained = fileMutex.WaitOne(5000);
 
                 Task<string> fileContentsTask = FileIO.ReadTextAsync(file).AsTask();
                 fileContentsTask.Wait();
@@ -40,16 +40,19 @@ namespace Scannit.Broker
             {
                 if (lockObtained)
                 {
-                    _fileMutex.ReleaseMutex();
+                    fileMutex.ReleaseMutex();
                 }
             }
 
             if (fileContents != null)
             {
-                var dict = JsonConvert.DeserializeObject<Dictionary<string, object>>(fileContents);
-                if (dict.TryGetValue(key, out object obj))
+                if (String.IsNullOrWhiteSpace(fileContents))
                 {
-                    readObject = (T)obj;
+                    readObject = default(T);
+                }
+                else
+                {
+                    readObject = JsonConvert.DeserializeObject<T>(fileContents);
                 }
             }
             return readObject;
@@ -57,13 +60,15 @@ namespace Scannit.Broker
 
         public static async Task SetAsync<T>(string propertyName, T valueToSet)
         {
+            Mutex fileMutex = _namedMutexes.GetOrAdd(propertyName, () => new Mutex(false, propertyName));
             bool lockObtained = false;
             try
             {
                 string jsonToWrite = JsonConvert.SerializeObject(valueToSet);
-                StorageFile file = await StorageFile.GetFileFromApplicationUriAsync(new Uri($"ms-appx:///{SharedFileName}"));
+                StorageFolder folder = ApplicationData.Current.LocalFolder;
+                StorageFile file = await folder.CreateFileAsync($"{propertyName}.json", CreationCollisionOption.OpenIfExists);
 
-                lockObtained = _fileMutex.WaitOne(5000);
+                lockObtained = fileMutex.WaitOne(5000);
 
                 FileIO.WriteTextAsync(file, jsonToWrite).AsTask().Wait();
             }
@@ -76,9 +81,15 @@ namespace Scannit.Broker
             {
                 if (lockObtained)
                 {
-                    _fileMutex.ReleaseMutex();
+                    fileMutex.ReleaseMutex();
                 }
             }
         }
+
+        // Property names
+        public const string IsApplicationInForeground = nameof(IsApplicationInForeground);
+        public const string LastSeenCard = nameof(LastSeenCard);
+        public const string LastSeenTimestamp = nameof(LastSeenTimestamp);
+
     }
 }
