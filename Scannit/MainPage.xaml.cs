@@ -12,6 +12,7 @@ using Windows.Devices.SmartCards;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -121,13 +122,19 @@ namespace Scannit
 
         public MainPage()
         {
-            this.InitializeComponent();
-            this.Loaded += MainPage_Loaded;
-        }        
+            this.InitializeComponent();            
+        }
 
-        private async void MainPage_Loaded(object sender, RoutedEventArgs e)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+            base.OnNavigatedTo(e);
             ((App)Application.Current).Scanner.LastSeenCardUpdated += Scanner_LastSeenCardUpdated;
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            base.OnNavigatedFrom(e);
+            ((App)Application.Current).Scanner.LastSeenCardUpdated -= Scanner_LastSeenCardUpdated;
         }
 
         private async void Scanner_LastSeenCardUpdated(object sender, TravelCard e)
@@ -151,6 +158,11 @@ namespace Scannit
         private void RaisePropertyChanged([CallerMemberName]string propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private void AppBarButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.Frame.Navigate(typeof(LogPage));
         }
     }
 }

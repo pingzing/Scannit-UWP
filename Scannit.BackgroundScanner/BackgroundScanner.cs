@@ -19,11 +19,12 @@ namespace Scannit.BackgroundScanner
 {
     public sealed class BackgroundScanner : IBackgroundTask
     {
-        BackgroundTaskDeferral _deferral;                
+        BackgroundTaskDeferral _deferral;
         private IBackgroundTaskInstance _taskInstance;
 
         public async void Run(IBackgroundTaskInstance taskInstance)
         {
+            await SharedState.LogAsync($"BackgroundScanner ({taskInstance.InstanceId}): Starting run of background task...");
             _taskInstance = taskInstance;
             _deferral = taskInstance.GetDeferral();
             _taskInstance.Progress = 1;
@@ -32,31 +33,47 @@ namespace Scannit.BackgroundScanner
             string selector = SmartCardReader.GetDeviceSelector();
             DeviceInformationCollection devices = await DeviceInformation.FindAllAsync(selector);
             var reader = await SmartCardReader.FromIdAsync(devices.FirstOrDefault().Id);
-            reader.CardAdded += Reader_CardAdded;        
+
+            await SharedState.LogAsync($"BackgroundScanner ({taskInstance.InstanceId}): Got card reader device.");
+
+            reader.CardAdded += Reader_CardAdded;
         }
 
         private async void Reader_CardAdded(SmartCardReader sender, CardAddedEventArgs args)
         {
+            await SharedState.LogAsync($"BackgroundScanner ({_taskInstance.InstanceId}): CardAdded event fired.");
             try
             {
                 TravelCard card = await CardOperations.ReadTravelCardAsync(args.SmartCard);
                 if (card != null)
                 {
+                    await SharedState.LogAsync($"BackgroundScanner ({_taskInstance.InstanceId}): Successful read card.");
+
                     Task updateCardTask = SharedState.SetAsync(SharedState.LastSeenCard, card.RawValues);
+                    await SharedState.LogAsync($"BackgroundScanner ({_taskInstance.InstanceId}): LastSeenCard updated.");
+
+
                     Task updateTimestampTask = SharedState.SetAsync(SharedState.LastSeenTimestamp, DateTimeOffset.UtcNow);
+                    await SharedState.LogAsync($"BackgroundScanner ({_taskInstance.InstanceId}): LastSeenTimestamp updated.");
+
                     if (await SharedState.GetAsync<bool>(SharedState.IsApplicationInForeground))
                     {
-                        _taskInstance.Progress = 2;
+                        await SharedState.LogAsync($"BackgroundScanner ({_taskInstance.InstanceId}): Application is in the foreground. Changed Progress value.");
+
+                       _taskInstance.Progress = 2;
                     }
                     else
                     {
-                        PostToastNotification(card);
+                        await SharedState.LogAsync($"BackgroundScanner ({_taskInstance.InstanceId}): Application is in the background. Post toast notification.");
+
+
+                       PostToastNotification(card);
                     }
                 }
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Failed to read travel card! Exception: {ex}\nStack trace: {ex.StackTrace}");
+                await SharedState.LogAsync($"BackgroundScanner ({_taskInstance.InstanceId}): Failed to read travel card! Exception: {ex}\nStack trace: {ex.StackTrace}");
             }
         }
 
@@ -93,9 +110,12 @@ namespace Scannit.BackgroundScanner
             ToastNotificationManager.CreateToastNotifier().Show(toast);
         }
 
-        private void TaskInstance_Canceled(IBackgroundTaskInstance sender, BackgroundTaskCancellationReason reason)
-        {            
-            _taskInstance.Progress = 0;            
+        private async void TaskInstance_Canceled(IBackgroundTaskInstance sender, BackgroundTaskCancellationReason reason)
+        {
+            await SharedState.LogAsync($"BackgroundScanner ({sender.InstanceId}): Background task cancelled. Reason: {reason}");
+
+           _taskInstance.Canceled -= TaskInstance_Canceled;
+            _taskInstance.Progress = 0;
             _deferral.Complete();
         }
     }

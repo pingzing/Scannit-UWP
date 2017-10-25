@@ -37,9 +37,7 @@ namespace Scannit
 
         public async Task StartScanner()
         {
-            StopScanner();
-
-            _appTrigger = new ApplicationTrigger();            
+            //StopScanner();                        
 
             var requestStatus = await BackgroundExecutionManager.RequestAccessAsync();
             if (requestStatus == BackgroundAccessStatus.AlwaysAllowed
@@ -73,7 +71,13 @@ namespace Scannit
             var builder = new BackgroundTaskBuilder();
             builder.Name = taskName;
             builder.TaskEntryPoint = entryPoint;
-            builder.SetTrigger(appTrigger);
+
+            if (appTrigger == null)
+            {
+                _appTrigger = new ApplicationTrigger();
+            }
+
+            builder.SetTrigger(_appTrigger);
 
             BackgroundTaskRegistration bgTask = builder.Register();
             bgTask.Progress += BgTask_Progress;
