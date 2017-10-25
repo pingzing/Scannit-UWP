@@ -88,14 +88,14 @@ namespace Scannit.BackgroundScanner
                     {
                         new AdaptiveText()
                         {
-                            Text = card.CardNumber
+                            Text = $"Remaining value: {(card.ValueTotalCents / 100m).ToString("#.##")} €\n" +
+                            $"Season pass expires: {youngestValueExpiration.ToLocalTime().ToString(DateTimeFormatInfo.CurrentInfo.ShortDatePattern)}",
+                            HintMaxLines = 2
                         },
                         new AdaptiveText()
                         {
-                            Text = $"Remaining value: {(card.ValueTotalCents / 100m).ToString("#.##")} €" +
-                            $"\nSeason pass expires: {youngestValueExpiration.ToLocalTime().ToString(DateTimeFormatInfo.CurrentInfo.ShortDatePattern)}",
-                            HintMaxLines = 2
-                        },
+                            Text = $"Card {card.CardNumber}\n"
+                        }
                     }
                 },
             };

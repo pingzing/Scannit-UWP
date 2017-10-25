@@ -37,7 +37,11 @@ namespace Scannit
 
         public async Task StartScanner()
         {
-            //StopScanner();                        
+            if (_appTrigger == null)
+            {
+                StopScanner();
+                _appTrigger = new ApplicationTrigger();
+            }
 
             var requestStatus = await BackgroundExecutionManager.RequestAccessAsync();
             if (requestStatus == BackgroundAccessStatus.AlwaysAllowed
@@ -47,6 +51,14 @@ namespace Scannit
                 string taskName = "Start background scanner";
                 _bgTask = RegisterBackgroundTask(entryPoint, taskName, _appTrigger);
                 ApplicationTriggerResult result = await _appTrigger.RequestAsync();
+                if (result == ApplicationTriggerResult.Allowed || result == ApplicationTriggerResult.CurrentlyRunning)
+                {
+                    IsBgTaskAlive = true;
+                }
+                else
+                {
+                    IsBgTaskAlive = false;
+                }
             }
         }
 
@@ -64,25 +76,18 @@ namespace Scannit
             foreach (var cur in BackgroundTaskRegistration.AllTasks)
             {
                 if (cur.Value.Name == taskName)
-                {
+                {                                        
                     return (BackgroundTaskRegistration)(cur.Value);
                 }
             }
             var builder = new BackgroundTaskBuilder();
             builder.Name = taskName;
             builder.TaskEntryPoint = entryPoint;
-
-            if (appTrigger == null)
-            {
-                _appTrigger = new ApplicationTrigger();
-            }
-
-            builder.SetTrigger(_appTrigger);
+            builder.SetTrigger(appTrigger);
 
             BackgroundTaskRegistration bgTask = builder.Register();
             bgTask.Progress += BgTask_Progress;
-            bgTask.Completed += BgTask_Completed;
-            IsBgTaskAlive = true;
+            bgTask.Completed += BgTask_Completed;            
 
             return bgTask;
         }

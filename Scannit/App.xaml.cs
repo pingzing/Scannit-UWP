@@ -60,8 +60,12 @@ namespace Scannit
                 Window.Current.Activate();
             }
 
-            await SharedState.SetAsync(SharedState.IsApplicationInForeground, true);
-            await Scanner.StartScanner();
+            // If we were suspended, Resuming will fire and take care of this
+            if (e.PreviousExecutionState != ApplicationExecutionState.Suspended)
+            {
+                await SharedState.SetAsync(SharedState.IsApplicationInForeground, true);
+                await Scanner.StartScanner();
+            }
         }
 
         private void App_BackRequested(object sender, BackRequestedEventArgs e)
